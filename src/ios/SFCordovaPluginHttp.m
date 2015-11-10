@@ -82,7 +82,8 @@
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [SFResponseSerializer serializer];
-    
+    manager.securityPolicy.allowInvalidCertificates = YES;
+    manager.securityPolicy.validatesDomainName = NO;
     for (NSString *key in [headers allKeys]) {
         [manager.requestSerializer setValue:[headers valueForKey:key] forHTTPHeaderField:key];
     }
