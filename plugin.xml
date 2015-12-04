@@ -1,11 +1,29 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="saltfactory-cordova-plugin-http" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>saltfactory-cordova-plugin-http</name>
+    <name>SFCordovaPluginHttp</name>
     <description>saltfactory's cordova http plugin</description>
     <js-module name="saltfactory-cordova-plugin-http" src="www/saltfactory-cordova-plugin-http.js">
-        <clobbers target="cordova.plugins.saltfactory-cordova-plugin-http" />
-        <!-- <clobbers target="cordova.plugins.saltfactory.http" /> -->
+        <clobbers target="SFCordovaPluginHttp" />
     </js-module>
+    
+    <platform name="android">
+      <config-file target="config.xml" parent="/*">
+        <feature name="saltfactory-cordova-plugin-http">
+          <param name="android-package" value="net.saltfactory.cordova.plugin.http.SFCordovaPluginHttp"/>
+        </feature>        
+      </config-file>
+      <source-file src="src/android/SFCordovaPluginHttp.java" target-dir="src/net/saltfactory/cordova/plugin/http" />
+      <source-file src="src/android/SFNetworkResponseRequest.java" target-dir="src/net/saltfactory/cordova/plugin/http" />
+      <source-file src="src/android/SFRequestBuilder.java" target-dir="src/net/saltfactory/cordova/plugin/http" />
+      <source-file src="src/android/SFUrlBuilder.java" target-dir="src/net/saltfactory/cordova/plugin/http" />
+      <source-file src="src/android/SFHttpStack.java" target-dir="src/net/saltfactory/cordova/plugin/http" />
+
+
+      <framework src="com.mcxiaoke.volley:library:1.0.19"/>
+      <framework src="com.squareup.okhttp:okhttp:2.6.0"/>
+      <framework src="com.squareup.okhttp:okhttp-urlconnection:2.6.0"/>
+      <!-- <framework src="src/android/rules.gradle" custom="true" type="gradleReference" /> -->
+    </platform>
 
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
@@ -17,34 +35,34 @@
         <header-file src="src/ios/SFCordovaPluginHttp.h" />
         <source-file src="src/ios/SFCordovaPluginHttp.m" />
 
-        <header-file src="src/ios/AFNetworking/AFHTTPRequestOperation.h" />
-        <source-file src="src/ios/AFNetworking/AFHTTPRequestOperation.m" />
+        <header-file src="src/ios/AFHTTPRequestOperation.h" />
+        <source-file src="src/ios/AFHTTPRequestOperation.m" />
 
-        <header-file src="src/ios/AFNetworking/AFHTTPRequestOperationManager.h" />
-        <source-file src="src/ios/AFNetworking/AFHTTPRequestOperationManager.m" />
+        <header-file src="src/ios/AFHTTPRequestOperationManager.h" />
+        <source-file src="src/ios/AFHTTPRequestOperationManager.m" />
 
-        <header-file src="src/ios/AFNetworking/AFHTTPSessionManager.h" />
-        <source-file src="src/ios/AFNetworking/AFHTTPSessionManager.m" />
+        <header-file src="src/ios/AFHTTPSessionManager.h" />
+        <source-file src="src/ios/AFHTTPSessionManager.m" />
         
-        <header-file src="src/ios/AFNetworking/AFNetworkReachabilityManager.h" />
-        <source-file src="src/ios/AFNetworking/AFNetworkReachabilityManager.m" />
+        <header-file src="src/ios/AFNetworkReachabilityManager.h" />
+        <source-file src="src/ios/AFNetworkReachabilityManager.m" />
 
-        <header-file src="src/ios/AFNetworking/AFNetworking.h" />
+        <header-file src="src/ios/AFNetworking.h" />
 
-        <header-file src="src/ios/AFNetworking/AFSecurityPolicy.h" />
-        <source-file src="src/ios/AFNetworking/AFSecurityPolicy.m" />
+        <header-file src="src/ios/AFSecurityPolicy.h" />
+        <source-file src="src/ios/AFSecurityPolicy.m" />
 
-        <header-file src="src/ios/AFNetworking/AFURLConnectionOperation.h" />
-        <source-file src="src/ios/AFNetworking/AFURLConnectionOperation.m" />
+        <header-file src="src/ios/AFURLConnectionOperation.h" />
+        <source-file src="src/ios/AFURLConnectionOperation.m" />
 
-        <header-file src="src/ios/AFNetworking/AFURLRequestSerialization.h" />
-        <source-file src="src/ios/AFNetworking/AFURLRequestSerialization.m" />
+        <header-file src="src/ios/AFURLRequestSerialization.h" />
+        <source-file src="src/ios/AFURLRequestSerialization.m" />
 
-        <header-file src="src/ios/AFNetworking/AFURLResponseSerialization.h" />
-        <source-file src="src/ios/AFNetworking/AFURLResponseSerialization.m" />
+        <header-file src="src/ios/AFURLResponseSerialization.h" />
+        <source-file src="src/ios/AFURLResponseSerialization.m" />
 
-        <header-file src="src/ios/AFNetworking/AFURLSessionManager.h" />
-        <source-file src="src/ios/AFNetworking/AFURLSessionManager.m" />
+        <header-file src="src/ios/AFURLSessionManager.h" />
+        <source-file src="src/ios/AFURLSessionManager.m" />
 
         <framework src="Security.framework" />
         <framework src="SystemConfiguration.framework" />
