@@ -10,35 +10,6 @@
 
 #import "AFHTTPRequestOperationManager.h"
 
-//@interface SFResponseSerializer: AFHTTPResponseSerializer
-//@end
-//
-//@implementation SFResponseSerializer
-//-(id)responseObjectForResponse:(NSURLResponse *)response data:(NSData *)data error:(NSError *__autoreleasing *)error
-//{
-//    id result;
-//    
-//    if ([response.MIMEType isEqualToString:@"application/json"]) {
-//        NSError *parsingError;
-//        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data
-//                                                                     options:NSJSONReadingAllowFragments
-//                                                                       error:&parsingError];
-//        if (parsingError) {
-//            *error = parsingError;
-//        } else {
-//            result = json;
-//        }
-//    } else {
-//        result = [NSString stringWithUTF8String:[data bytes]];
-//    }
-//    
-//    return result;
-//}
-//
-//@end
-
-
-
 @implementation SFCordovaPluginHttp
 
 - (void)initCommand
@@ -48,8 +19,10 @@
     self.headers = nil;
     self.data = nil;
     self.params = nil;
-    self.jsonable = nil;
+    self.jsonable = NO;
+    self.securable = NO;
     self.command = nil;
+    self.responseType = nil;
 }
 
 // result to JavaScript interface, private functions
@@ -88,6 +61,8 @@
     self.data = [NSMutableDictionary dictionaryWithDictionary:[requestInfo valueForKey:@"data"]];
     self.params = [NSMutableDictionary dictionaryWithDictionary:[requestInfo valueForKey:@"params"]];
     self.jsonable = [requestInfo valueForKey:@"jsonable"];
+    self.securable = [requestInfo valueForKey:@"securable"];
+    self.responseType = [[requestInfo valueForKey:@"responseType"] uppercaseString];
     
     
     //create URL query string by self.params
@@ -114,6 +89,15 @@
     //TODO: SSL verification
     manager.securityPolicy.allowInvalidCertificates = YES;
     manager.securityPolicy.validatesDomainName = NO;
+//
+////    AFSecurityPolicy *policy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+//        AFSecurityPolicy *policy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+//    [policy setAllowInvalidCertificates:YES];
+//    [policy setValidatesDomainName:NO];
+//    [manager setSecurityPolicy:policy];
+////    policy.allowInvalidCertificates = YES;
+////    policy.validatesDomainName = NO;
+////    manager.securityPolicy = policy;
     
     if (self.jsonable) {
         manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -125,6 +109,11 @@
     
     for (NSString *key in [self.headers allKeys]) {
         [manager.requestSerializer setValue:[self.headers valueForKey:key] forHTTPHeaderField:key];
+    }
+    
+    
+    if ([self.method isEqualToString:@"POST"]) {
+        manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     }
     
     return manager;
@@ -152,6 +141,7 @@
              }
              
              [resultInfo setValue:operation.response.allHeaderFields forKey:@"headers"];
+             NSLog(@"%@", resultInfo);
              [self sendPluginResult:resultInfo withStatus:CDVCommandStatus_OK];
              
          }
@@ -176,10 +166,12 @@
 
 - (void)request:(CDVInvokedUrlCommand *)command
 {
-    [self parseCommand:command];
-    
-    AFHTTPRequestOperationManager *manager = [self createHttpRequestOperationManager];
-    [self addHttpRequestOperationToManager:manager];
+    [self.commandDelegate runInBackground:^{
+        [self parseCommand:command];
+        
+        AFHTTPRequestOperationManager *manager = [self createHttpRequestOperationManager];
+        [self addHttpRequestOperationToManager:manager];
+    }];
     
 }
 
@@ -188,10 +180,11 @@
     [self parseCommand:command];
     
     self.jsonable = true;
-    [self.headers setValue:@"application/json" forKey:@"Content-Type"];
+//    [self.headers setValue:@"application/json" forKey:@"Content-Type"];
     
     AFHTTPRequestOperationManager *manager = [self createHttpRequestOperationManager];
     [self addHttpRequestOperationToManager:manager];
 
 }
 @end
+    

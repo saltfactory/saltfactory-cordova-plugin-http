@@ -16,6 +16,8 @@
 @property (nonatomic, strong) NSString* urlString;
 @property (nonatomic, strong) NSString* method;
 @property (nonatomic) BOOL jsonable;
+@property (nonatomic) BOOL securable;
+@property (nonatomic, strong) NSString *responseType;
 @property (nonatomic, strong) NSDictionary *data;
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, strong) NSDictionary *headers;
